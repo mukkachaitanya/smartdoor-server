@@ -3,41 +3,52 @@ const app = express();
 const multer = require('multer');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
+
+const pyScript = process.env.RECOG_SCRIPT;
 
 const upload = multer({
     storage: multer.diskStorage({
         destination: './uploads/',
         filename: function (req, file, cb){
             // user shortid.generate() alone if no extension is needed
-            cb(null, path.parse(file.originalname).ext);
+            cb(null, file.originalname);
         }
     })
 });
 
-// app.use(bodyParser.json()); // for parsing application/json
-// app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 
 const port = 3000;
 
-app.post('/upload', (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
     
     if(!req.body){
         res.end();
     }
 
-    let img_encoded = req.body;
-    let img = img_encoded.replace(/^data:image\/png;base64,/, "");
+    console.log(req.file);
+    const pathImg = './' + req.path;
+   
+    const { spawn } = require('child_process');
+    const pyProg = spawn('python2', [pyScript, pathImg]);
 
-    fs.writeFile("./upload/img.jpg", img, 'base64', function(err) {
-        const { spawn } = require('child_process');
-        const pyProg = spawn('python2', ['./../model/fig_chk.py', 'hell']);
+    process.stderr.pipe(pyProg.stderr);
 
-        pyProg.stdout.on('data', function(data) {
-            console.log(data.toString());
-            res.write(data);
-            res.end();
-        });
+    pyProg.stdout.on('data', function(data) {
+        console.log(data.toString());
+        res.write(data);
+        res.end();
     });
+    
+    pyProg.on('exit', (code, signal) => {
+        console.log('child process exited with ' +
+        `code ${code} and signal ${signal}`);
+        res.write('hel');
+        res.end();
+    })
+
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
