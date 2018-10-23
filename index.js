@@ -29,7 +29,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     }
 
     console.log(req.file);
-    const pathImg = './' + req.path;
+    const pathImg = './' + req.file.path;
    
     const { spawn } = require('child_process');
     const pyProg = spawn('python2', [pyScript, pathImg]);
@@ -41,14 +41,17 @@ app.post('/upload', upload.single('file'), (req, res) => {
         res.write(data);
         res.end();
     });
+
+    pyProg.on('error', (err) => {
+        console.error(err);
+        res.write('error');
+        res.end();
+    });
     
     pyProg.on('exit', (code, signal) => {
         console.log('child process exited with ' +
         `code ${code} and signal ${signal}`);
-        res.write('hel');
-        res.end();
-    })
-
+    });
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
