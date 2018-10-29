@@ -1,20 +1,30 @@
 import os
+import sys
 import face_recognition
-#os.chdir("/home/sid/Desktop/SE_Facial_Recognition/known_images")
+import pickle
 
-f = open("./true_encodings.txt","a+")
+abs_path = os.path.dirname(os.path.realpath(__file__))
 
-import os
-for file in os.listdir("./known_images"):
-    if file.endswith(".jpg"):
-        known_image = face_recognition.load_image_file("./known_images/"+file)
-        known_encoding = face_recognition.face_encodings(known_image)[0]
-        #print(known_encoding)
-        f.write(str(known_encoding)+"\n")
+name = sys.argv[1]
+unknown_image = face_recognition.load_image_file(sys.argv[2])
+try:
+    unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
 
-#for img in glob.glob(".jpg"):
-#    known_image = face_recognition.load_image_file(img)
-#    known_encoding = face_recognition.face_encodings(known_image)[0]
-#    f.write(known_encoding)
+    if os.path.getsize(str(abs_path) +"/true_encodings.csv") == 0:
+        dict={}
+        dict[name] = unknown_encoding
+        with open(str(abs_path) + "/true_encodings.csv","wb") as f:
+            pickle.dump(dict,f)
 
-f.close()
+    else:
+        with open(str(abs_path) + "/true_encodings.csv", "rb") as f:
+            dict = pickle.load(f)
+
+        dict[name] = unknown_encoding
+
+        with open(str(abs_path) +  "/true_encodings.csv","wb") as f:
+            pickle.dump(dict,f)
+
+except:
+    print("No face detected, try other image")
+

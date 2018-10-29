@@ -1,4 +1,6 @@
 {
     "recognitionScript" : "./model/fac_reg.py",
+    "userAddScript" : "./model/add.py",
+    "deleteScript" : "./model/delete.py",
     "port": 3002
 }
