@@ -15,12 +15,19 @@ try:
 
     else:
         result = False
+        name = ""
         with open(str(abs_path) + "/true_encodings.csv", "rb") as f:
             dict = pickle.load(f)
         for key, value in dict.iteritems():
             bool = face_recognition.compare_faces([value],unknown_encoding,tolerance=0.45)
             result = result or bool[0]
-        print(result)
+            if result == True : 
+                name = key
+                break
+        if result == True :
+            print("Verified, Welcome " + name + "!")
+        else:
+            print("Unauthorised!")
 
 except:
     print("No face detected, try other image")
