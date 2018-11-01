@@ -2,16 +2,14 @@ const express = require('express');
 const app = express();
 const multer = require('multer');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
 
-const pyScript = process.env.RECOG_SCRIPT;
+const config = require('./config.json');
+const pyScript = config.recognitionScript;
 
 const upload = multer({
     storage: multer.diskStorage({
         destination: './uploads/',
         filename: function (req, file, cb){
-            // user shortid.generate() alone if no extension is needed
             cb(null, file.originalname);
         }
     })
@@ -51,6 +49,10 @@ app.post('/upload', upload.single('file'), (req, res) => {
     pyProg.on('exit', (code, signal) => {
         console.log('child process exited with ' +
         `code ${code} and signal ${signal}`);
+        if(res){
+            res.write('error');
+            res.end();
+        }
     });
 });
 
