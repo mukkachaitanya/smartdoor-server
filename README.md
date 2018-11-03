@@ -1,7 +1,8 @@
 # Smart Door
+This applicaion enables you to run the Smart Door server.
 
 ## Prerequisites 
-Python2 and node-js(v8)
+Python2 and node-js(v8). Also requires `cmake` to be installed on the system.
 
 ## Steps
 1. Clone the git repository <br>
@@ -16,6 +17,12 @@ git
 
 Edit `config.json` to change the location of the python script. (Default is set to work).
 
-## Regonition script
+## Recgonition script
 
 For information regarding adding or modifying the face recognition script have a look at the [README](./model/README.md) 
+
+## Mobile App
+
+Get the app here: [smartdoor.apk](https://drive.google.com/file/d/1WuvrzCNf8iuExqPViZNmu9k9DELu-W94/view?usp=sharing)
+
+Run the server and make sure to take a note of the server's IP. Connect the mobile device to the same network as the server. Configure the IP and PORT of the server on the mobile app.
