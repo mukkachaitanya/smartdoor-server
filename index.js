@@ -2,9 +2,12 @@ const express = require('express');
 const app = express();
 const multer = require('multer');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const config = require('./config.json');
-const pyScript = config.recognitionScript;
+const pyScript = path.resolve(config.recognitionScript);
+
+console.log(pyScript);
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -18,7 +21,7 @@ const upload = multer({
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
 
-const port = 3000;
+const port = config.port || 3000;
 
 app.post('/upload', upload.single('file'), (req, res) => {
     
@@ -49,7 +52,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     pyProg.on('exit', (code, signal) => {
         console.log('child process exited with ' +
         `code ${code} and signal ${signal}`);
-        if(res){
+        if(!res.finished){
             res.write('error');
             res.end();
         }

@@ -1,3 +1,4 @@
 {
-    "recognitionScript" : "./model/face_reg.py"
+    "recognitionScript" : "./model/fac_reg.py",
+    "port": 3002
 }

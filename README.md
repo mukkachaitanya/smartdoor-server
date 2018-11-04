@@ -15,7 +15,7 @@ git
 4. `npm start` to start the server
 
 
-Edit `config.json` to change the location of the python script. (Default is set to work).
+Edit `config.json` to change the location of the python script, or the port of the server. (Default is set to work).
 
 ## Recgonition script
 
