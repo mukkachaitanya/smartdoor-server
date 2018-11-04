@@ -11,7 +11,7 @@ git
 2. `cd SmartDoor` to move to the cloned directory.
 
 2. Use `npm install` to install the nodejs dependencies
-3. `npm install python-deps` to install the python dependencies.
+3. `npm run python-deps` to install the python dependencies.
 4. `npm start` to start the server
 
 
